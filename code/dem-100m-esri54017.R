@@ -49,7 +49,7 @@ create_template_rast <- function(xres, yres, crs, bbox) {
 # Preliminary processing
 ## verify that 90m version exists
 assertthat::assert_that(
-  file.path(output_dir, "dem-90m-epsg4326.tif"),
+  file.exists(file.path(output_dir, "dem-90m-epsg4326.tif")),
   msg = "can't find the 90m elevation raster"
 )
 
@@ -67,12 +67,14 @@ rast_extent <- sf::st_as_sf(
 )
 rast_extent <- sf::st_transform(rast_extent, rast_crs)
 rast_extent <- sf::st_bbox(rast_extent)
-rm(r)
 
 ## create template raster
 x <- create_template_rast(
   xres = 100, yres = 100, crs = rast_crs, bbox = rast_extent
 )
+
+## clean up
+rm(r)
 
 # Main processing
 ### create wkt file
@@ -93,6 +95,7 @@ gdalUtils::gdalwarp(
   co = c(
     "COMPRESS=DEFLATE",
     paste0("NUM_THREADS=", n_threads),
+    "INTERLEAVE=BAND",
     "BIGTIFF=YES"
   ),
   wm = as.character(cache_limit),
