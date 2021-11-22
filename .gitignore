@@ -8,6 +8,14 @@
 
 # data files
 *.tif
+*.tar
+*.tar.bil
+*.bil
+*.hdr
+*.prj
+*.aux.xml
+*.stx
+*.qml
 *.tar.gz
 
 # system files

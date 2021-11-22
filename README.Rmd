@@ -6,7 +6,7 @@ output:
 
 <!--- README.md is generated from README.Rmd. Please edit that file -->
 
-# Digital elevation model (90m global)
+# Digital elevation model (100m global)
 
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
@@ -20,14 +20,34 @@ w = 3.5
 ow = "400"
 ```
 
-# Installation
+This repository contains code to generate a global digital elevation model (based on Robinson *et al.* 2014). Specifically, elevation data are downloaded from the [EarthEnv project](https://www.earthenv.org/DEM.html). Next, the data are combined into a single raster (GeoTIFF) file containing the elevation data (90 m resolution; [EPSG:4326 coordinate reference system](https://epsg.io/4326)). Finally, the data are projected to the World Behrmann coordinate reference system using (100 m resolution; [ESRI:4326 coordinate reference system](https://epsg.io/54017)). Pre-processed versions of the data can be downloaded from a [Zenodo Digital Repository](TODO). **All credit should go to Robinson *et al.* 2014, please cite their work if you use this dataset.**
 
-TODO.
+```{r}
+r <- terra::rast("results/dem-100m-esri54017.tif")
+plot(r, main = "Global elevation (100 m)")
+```
 
 # Usage
 
-TODO.
+After cloning this repository, you can rerun the entire analysis on your own computer using the system command `make clean all`. Please see below for software requirements.
+
+# Software requirements
+
+* Operating system
+  Ubuntu (21.1) (200 Gb disk space)
+* Software
+  GNU make (version 4.1)
+  GDAL (version 3.2.2)
+  R (version 4.1.1)
+* System packages
+  gdal-bin
+  libudunits2-dev
+  libgdal-dev
+  libgeos-dev
+  libproj-dev
+  libxml2-dev
+  libssl-dev
 
 # References
 
-TODO.
+Robinson N, Regetz J, & Guralnick RP (2014) EarthEnv-DEM90: A nearly-global, void-free, multi-scale smoothed, 90m digital elevation model from fused ASTER and SRTM data. *ISPRS Journal of Photogrammetry and Remote Sensing*, 87: 57--67.

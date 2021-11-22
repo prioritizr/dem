@@ -3,11 +3,11 @@
 library(raster)
 library(terra)
 library(sf)
-library(rappdirs)
 library(gdalUtils)
 library(wdman)
 library(RSelenium)
 library(archive)
+library(assertthat)
 
 ## set variables
 ### set number of threads
@@ -17,12 +17,16 @@ n_threads <- max(1, parallel::detectCores() - 2)
 page_wait <- 2
 
 ### specify directories
+temp_dir <- file.path(getwd(), "dem-tmp")
 data_dir <- normalizePath("data")
-
-### change this to where you want to save the outputs
 output_dir <- normalizePath("results")
 
 # Preliminary processing
+### create directory if needed
+if (!file.exists(temp_dir)) {
+  dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
+}
+
 ## find URLs to download data
 pjs <- wdman::phantomjs(verbose = FALSE)
 rd <- RSelenium::remoteDriver(port = 4567L, browserName = "phantomjs")
@@ -42,15 +46,14 @@ try(pjs$stop(), silent = TRUE)
 
 ## fetch elevation data
 elev_archive_paths <- plyr::laply(urls, .progress = "text", function(x) {
-  path <- file.path(cache_dir, basename(x))
+  path <- file.path(data_dir, basename(x))
   if (!file.exists(path)) {
     curl::curl_download(url = x, destfile = path, quiet = TRUE)
   }
-  TRUE
+  path
 })
 
 ## unzip data
-
 result <- plyr::laply(elev_archive_paths, .progress = "text", function(x) {
   d <- file.path(temp_dir, tools::file_path_sans_ext(basename(x)))
   if (!file.exists(d)) {
@@ -60,11 +63,12 @@ result <- plyr::laply(elev_archive_paths, .progress = "text", function(x) {
   TRUE
 })
 
+# Main processing
 ## merge data together
-raw_elev_path <- tempfile(fileext = ".tif")
-raw_elev_data <- gdalUtils::mosaic_rasters(
-  gdalfile = dir(temp_dir, "^.*\\.bil$", full.names = TRUE),
-  dst_dataset = raw_elev_path,
+elev_path <- file.path(output_dir, "dem-90m-epsg4326.tif")
+result <- gdalUtils::mosaic_rasters(
+  gdalfile = dir(temp_dir, "^.*\\.bil$", recursive = TRUE, full.names = TRUE),
+  dst_dataset = elev_path,
   separate = FALSE,
   output_Raster = FALSE,
   force_ot = "Int32",
@@ -72,42 +76,20 @@ raw_elev_data <- gdalUtils::mosaic_rasters(
   wo = paste0("NUM_THREADS=", n_threads),
   oo = paste0("NUM_THREADS=", n_threads),
   co = c(
-    "COMPRESS=LZW",
-    paste0("NUM_THREADS=", n_threads)
+    "COMPRESS=DEFLATE",
+    paste0("NUM_THREADS=", n_threads),
+    "BIGTIFF=YES"
   ),
   verbose = TRUE
 )
 
-## import data
-template_data <- get_world_template(dir = rappdirs::user_data_dir("aoh"))
-
-## project data
-elevation_data <- terra_gdal_project(
-  x = elevation_data,
-  y = template_data,
-  n_threads = n_threads,
-  filename = tempfile(fileext = ".tif"),
-  datatype = "INT2S",
-  verbose = TRUE
+## verify success
+assertthat::assert_that(
+  file.exists(elev_path),
+  msg = "Oh no, something went wrong!"
 )
 
-# Exports
-## save raster to disk
-## create file path
-curr_path <- file.path(output_dir, "prep-elevation-100m.tif")
-### save raster
-terra::writeRaster(
-  elevation_data, curr_path, overwrite = TRUE
-)
-## assert all files saved
-assertthat::assert_that(file.exists(curr_path))
-
-## upload data to GitHub
-withr::with_dir(output_dir, {
-  piggyback::pb_upload(
-    file = "prep-elevation-100m.tif",
-    repo = "prioritizr/aoh",
-    tag = "data",
-    overwrite = TRUE
-  )
-})
+# Clean up
+if (!identical(temp_dir, tempdir())) {
+  unlink(temp_dir, force = TRUE, recursive = TRUE)
+}
