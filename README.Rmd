@@ -6,7 +6,7 @@ output:
 
 <!--- README.md is generated from README.Rmd. Please edit that file -->
 
-# dem
+# Digital elevation model (90m global)
 
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
@@ -20,4 +20,14 @@ w = 3.5
 ow = "400"
 ```
 
-# TODO
+# Installation
+
+TODO.
+
+# Usage
+
+TODO.
+
+# References
+
+TODO.
