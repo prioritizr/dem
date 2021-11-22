@@ -1,0 +1,18 @@
+# R profile files
+*.Rproj.user
+*.Rhistory
+.Rproj.user
+
+# log files
+*.log
+
+# data files
+*.tif
+*.tar.gz
+
+# system files
+.directory
+
+# do not ignore the following files
+!.gitkeep
+!*/
