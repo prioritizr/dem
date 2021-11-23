@@ -21,9 +21,6 @@
 # system files
 .directory
 
-# temp files
-*.png
-
 # do not ignore the following files
 !.gitkeep
 !*/

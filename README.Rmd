@@ -9,14 +9,15 @@ output:
 # Digital elevation model (100 m global)
 
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![DOI](https://zenodo.org/badge/430568284.svg)](https://zenodo.org/badge/latestdoi/430568284)
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(fig.path = "figures/README-", fig.align = "center")
 ```
 
-This repository contains code to generate a global digital elevation model (based on Robinson *et al.* 2014). Specifically, elevation data are downloaded from the [EarthEnv project](https://www.earthenv.org/DEM.html). Next, the data are combined into a single raster (GeoTIFF) file containing the elevation data (90 m resolution; [EPSG:4326 coordinate reference system](https://epsg.io/4326)). Finally, the data are projected to the World Behrmann coordinate reference system using (100 m resolution; [ESRI:4326 coordinate reference system](https://epsg.io/54017)). A processed version of the data can be downloaded from the [Zenodo Digital Repository](TODO). **All credit should go to Robinson *et al.* 2014, please cite their work if you use this dataset.**
+This repository contains code to generate a global digital elevation model (based on Robinson *et al.* 2014). Specifically, elevation data are downloaded from the [EarthEnv project](https://www.earthenv.org/DEM.html). Next, the data are combined into a single raster (GeoTIFF) file containing the elevation data (90 m resolution; [EPSG:4326 coordinate reference system](https://epsg.io/4326)). Finally, the data are projected to the World Behrmann coordinate reference system using (100 m resolution; [ESRI:4326 coordinate reference system](https://epsg.io/54017)). A processed version of the data can be downloaded from the [Zenodo Digital Repository](TODO). **All credit should go to Robinson *et al.* (2014), please cite their work if you use this dataset.**
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 2.5, fig.width = 7.0, dpi = 250}
+```{r "map", echo = FALSE, message = FALSE, warning = FALSE, fig.height = 2.5, fig.width = 7.0, dpi = 250}
 # load packages
 library(terra)
 library(ggplot2)
@@ -67,11 +68,11 @@ p <-
 print(p)
 ```
 
-# Metadata
+## Metadata
 
 The raster (GeoTIFF) file is `dem-100m-esri54017.tif` (see below for details).
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, comment = NA}
 withr::with_dir("results", {
   cat(
     system("gdalinfo dem-100m-esri54017.tif", intern = TRUE),
@@ -80,27 +81,31 @@ withr::with_dir("results", {
 })
 ```
 
-# Usage
+## Usage
 
 You can run the code to produce the dataset using the system command `make clean all`. After processing has successfully completed, the code will produce a raster (GeoTIFF) file named `dem-100m-esri54017.tif` in the `results` directory.
 
-# Software requirements
+## Software requirements
 
-* Operating system
-  Ubuntu (21.10) (300 Gb disk space available)
-* Software
-  GNU make (version 4.1)
-  GDAL (version 3.2.2)
-  R (version 4.1.1)
-* System packages
-  gdal-bin
-  libudunits2-dev
-  libgdal-dev
-  libgeos-dev
-  libproj-dev
-  libxml2-dev
-  libssl-dev
+Operating system
+  * Ubuntu (21.10) (300 Gb disk space available)
 
-# References
+Software
+  * GNU make (version 4.1)
+  * GDAL (version 3.2.2)
+  * R (version 4.1.1)
 
-Robinson N, Regetz J, & Guralnick RP (2014) EarthEnv-DEM90: A nearly-global, void-free, multi-scale smoothed, 90m digital elevation model from fused ASTER and SRTM data. *ISPRS Journal of Photogrammetry and Remote Sensing*, 87: 57--67.
+System packages
+  * gdal-bin
+  * libudunits2-dev
+  * libgdal-dev
+  * libgeos-dev
+  * libproj-dev
+  * libxml2-dev
+  * libssl-dev
+
+## Citation
+
+This dataset was derived from Robinson *et al.* (2014). If you use this dataset, you should cite their work - they deserve all the credit!
+
+> Robinson N, Regetz J, & Guralnick RP (2014) EarthEnv-DEM90: A nearly-global, void-free, multi-scale smoothed, 90m digital elevation model from fused ASTER and SRTM data. *ISPRS Journal of Photogrammetry and Remote Sensing*, **87**: 57--67.
