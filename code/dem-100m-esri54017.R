@@ -77,11 +77,11 @@ x <- create_template_rast(
 rm(r)
 
 # Main processing
-### create wkt file
+### create wkt file for coordinate reference system
 wkt_path <- tempfile(fileext = ".wkt")
 writeLines(terra::crs(x), wkt_path)
 
-## run command
+## project raster
 output_path <- file.path(output_dir, "dem-100m-esri54017.tif")
 gdalUtils::gdalwarp(
   srcfile = file.path(output_dir, "dem-90m-epsg4326.tif"),
@@ -96,6 +96,7 @@ gdalUtils::gdalwarp(
     "COMPRESS=DEFLATE",
     paste0("NUM_THREADS=", n_threads),
     "INTERLEAVE=BAND",
+    "TILED=YES",
     "BIGTIFF=YES"
   ),
   wm = as.character(cache_limit),
@@ -104,14 +105,25 @@ gdalUtils::gdalwarp(
   oo = paste0("NUM_THREADS=", n_threads),
   doo = paste0("NUM_THREADS=", n_threads),
   ot = "Int16",
+  dstnodata = 0,
   overwrite = TRUE,
   output_Raster = FALSE,
   verbose = TRUE,
   q = FALSE
 )
 
+## remove NA flag so that zeros are zeros (and not NA values)
+system(paste0("gdal_edit.py ", output_path, " -unsetnodata"))
+
 ## verify success
 assertthat::assert_that(
-  file.exists(elev_path),
-  msg = "Oh no, something went wrong!"
+  file.exists(output_path),
+  msg = "Oh no, something went wrong with GDAL processing!"
+)
+
+# Checks
+output_data <- terra::rast(output_path)
+assertthat::assert_that(
+  terra::compareGeom(output_data, x, res = TRUE, stopiffalse = FALSE),
+  msg = "Output raster has incorrect spatial properties"
 )
