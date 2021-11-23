@@ -87,13 +87,25 @@ the `results` directory.
 
 ## Software requirements
 
-Operating system \* Ubuntu (21.10) (300 Gb disk space available)
+Operating system
 
-Software \* GNU make (version 4.1) \* GDAL (version 3.2.2) \* R (version
-4.1.1)
+-   Ubuntu (21.10) (300 Gb disk space available)
 
-System packages \* gdal-bin \* libudunits2-dev \* libgdal-dev \*
-libgeos-dev \* libproj-dev \* libxml2-dev \* libssl-dev
+Software
+
+-   GNU make (version 4.1)
+-   GDAL (version 3.2.2)
+-   R (version 4.1.1)
+
+System packages
+
+-   `gdal-bin`
+-   `libudunits2-dev`
+-   `libgdal-dev`
+-   `libgeos-dev`
+-   `libproj-dev`
+-   `libxml2-dev`
+-   `libssl-dev`
 
 ## Citation
 
