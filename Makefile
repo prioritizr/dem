@@ -1,4 +1,4 @@
-all: dem
+all: readme dem
 
 dem: results/dem-90m-epsg4326.tif results/dem-100m-esri54017.tif
 

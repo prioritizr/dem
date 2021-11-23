@@ -14,28 +14,80 @@ output:
 knitr::opts_chunk$set(fig.path = "figures/README-", fig.align = "center")
 ```
 
-```{r, include = FALSE}
-h = 3.5
-w = 3.5
-ow = "400"
+This repository contains code to generate a global digital elevation model (based on Robinson *et al.* 2014). Specifically, elevation data are downloaded from the [EarthEnv project](https://www.earthenv.org/DEM.html). Next, the data are combined into a single raster (GeoTIFF) file containing the elevation data (90 m resolution; [EPSG:4326 coordinate reference system](https://epsg.io/4326)). Finally, the data are projected to the World Behrmann coordinate reference system using (100 m resolution; [ESRI:4326 coordinate reference system](https://epsg.io/54017)). A processed version of the data can be downloaded from the [Zenodo Digital Repository](TODO). **All credit should go to Robinson *et al.* 2014, please cite their work if you use this dataset.**
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 2.5, fig.width = 7.0, dpi = 250}
+# load packages
+library(terra)
+library(ggplot2)
+library(viridis)
+
+# load raster
+x <- terra::rast("results/dem-100m-esri54017.tif")
+
+# extract data to plot
+plot_raster <- terra::spatSample(
+  x, size = 400000, method = "regular", as.raster = TRUE
+)
+plot_data <- as.data.frame(plot_raster, xy = TRUE)
+names(plot_data)[3] <- "value"
+plot_data$title <- "Global elevation (100 m)"
+plot_data$subtitle <- "dem-100m-esri54017.tif"
+# make plot
+p <-
+  ggplot() +
+  geom_tile(
+    data = plot_data,
+    mapping = aes(x = x, y = y, fill = value),
+    height = yres(plot_raster),
+    width = xres(plot_raster),
+  ) +
+  scale_fill_viridis(name = "Elevation (m)") +
+  coord_fixed(expand = FALSE) +
+  facet_wrap(~ title + subtitle) +
+  theme(
+    legend.pos = "right",
+    axis.ticks = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    axis.line = element_blank(),
+    axis.ticks.length = unit(0, "null"),
+    axis.ticks.margin = unit(0, "null"),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.text = element_text(size = 8),
+    legend.margin = unit(0, "null"),
+    plot.margin = unit(c(0.001, 0.001, 0.001, 0.01), "pt"),
+    strip.background = ggplot2::element_rect(color = "black", fill = "black"),
+    strip.text = ggplot2::element_text(color = "white")
+  )
+
+# render plot
+print(p)
 ```
 
-This repository contains code to generate a global digital elevation model (based on Robinson *et al.* 2014). Specifically, elevation data are downloaded from the [EarthEnv project](https://www.earthenv.org/DEM.html). Next, the data are combined into a single raster (GeoTIFF) file containing the elevation data (90 m resolution; [EPSG:4326 coordinate reference system](https://epsg.io/4326)). Finally, the data are projected to the World Behrmann coordinate reference system using (100 m resolution; [ESRI:4326 coordinate reference system](https://epsg.io/54017)). Pre-processed versions of the data can be downloaded from a [Zenodo Digital Repository](TODO). **All credit should go to Robinson *et al.* 2014, please cite their work if you use this dataset.**
+# Metadata
 
-```{r}
-library(terra)
-r <- terra::rast("results/dem-100m-esri54017.tif")
-plot(r, main = "Global elevation (100 m)")
+The raster (GeoTIFF) file is `dem-100m-esri54017.tif` (see below for details).
+
+```{r, echo = FALSE}
+withr::with_dir("results", {
+  cat(
+    system("gdalinfo dem-100m-esri54017.tif", intern = TRUE),
+    sep = "\n"
+  )
+})
 ```
 
 # Usage
 
-After cloning this repository, you can rerun the entire analysis on your own computer using the system command `make clean all`. Please see below for software requirements.
+You can run the code to produce the dataset using the system command `make clean all`. After processing has successfully completed, the code will produce a raster (GeoTIFF) file named `dem-100m-esri54017.tif` in the `results` directory.
 
 # Software requirements
 
 * Operating system
-  Ubuntu (21.1) (200 Gb disk space)
+  Ubuntu (21.10) (300 Gb disk space available)
 * Software
   GNU make (version 4.1)
   GDAL (version 3.2.2)
