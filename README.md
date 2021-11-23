@@ -16,8 +16,9 @@ system](https://epsg.io/4326)). Finally, the data are projected to the
 World Behrmann coordinate reference system using (100 m resolution;
 [ESRI:4326 coordinate reference system](https://epsg.io/54017)). A
 processed version of the data can be downloaded from the [Zenodo Digital
-Repository](TODO). **All credit should go to Robinson *et al.* (2014),
-please cite their work if you use this dataset.**
+Repository](https://zenodo.org/badge/latestdoi/430568284). **All credit
+should go to Robinson *et al.* (2014), please cite their work if you use
+this dataset.**
 
 <img src="figures/README-map-1.png" style="display: block; margin: auto;" />
 
