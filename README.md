@@ -4,7 +4,9 @@
 # Digital elevation model (100 m global)
 
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![DOI](https://zenodo.org/badge/430568284.svg)](https://zenodo.org/badge/latestdoi/430568284)
+[![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.5719982-blue.svg)](https://doi.org/10.5281/zenodo.5719982)
+
+[![DOI](https://zenodo.org/badge/430568284.svg)](https://doi.org/10.5281/zenodo.5719982)
 
 This repository contains code to generate a global digital elevation
 model (based on Robinson *et al.* 2014). Specifically, elevation data
@@ -16,9 +18,9 @@ system](https://epsg.io/4326)). Finally, the data are projected to the
 World Behrmann coordinate reference system using (100 m resolution;
 [ESRI:4326 coordinate reference system](https://epsg.io/54017)). A
 processed version of the data can be downloaded from the [Zenodo Digital
-Repository](https://zenodo.org/badge/latestdoi/430568284). **All credit
-should go to Robinson *et al.* (2014), please cite their work if you use
-this dataset.**
+Repository](https://doi.org/10.5281/zenodo.5719982). **All credit should
+go to Robinson *et al.* (2014), please cite their work if you use this
+dataset.**
 
 <img src="figures/README-map-1.png" style="display: block; margin: auto;" />
 
