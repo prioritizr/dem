@@ -6,8 +6,6 @@
 [![lifecycle](https://img.shields.io/badge/Lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.5719982-blue.svg)](https://doi.org/10.5281/zenodo.5719982)
 
-[![DOI](https://zenodo.org/badge/430568284.svg)](https://doi.org/10.5281/zenodo.5719982)
-
 This repository contains code to generate a global digital elevation
 model (based on Robinson *et al.* 2014). Specifically, elevation data
 are downloaded from the [EarthEnv
